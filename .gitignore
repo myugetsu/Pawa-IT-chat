@@ -29,6 +29,14 @@ node_modules/
 dist/
 build/
 
+# Next.js-specific ignores
+.next/
+out/
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
 # Ignore secrets
 *.key
 *.pem
