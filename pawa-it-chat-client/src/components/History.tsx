@@ -1,4 +1,5 @@
 import { HistoryItem } from '@/types';
+import ReactMarkdown from 'react-markdown';
 
 interface HistoryProps {
   items: HistoryItem[];
@@ -22,7 +23,11 @@ export default function History({ items }: HistoryProps) {
                 </span>
               </div>
               <div className="text-gray-700 text-sm pl-2 border-l-2 border-indigo-200">
-                {item.response}
+                <div className="prose prose-sm prose-indigo max-w-none" style={{ color: '#000' }}>
+                  <ReactMarkdown>
+                    {item.response}
+                  </ReactMarkdown>
+                </div>
               </div>
             </div>
           ))}
