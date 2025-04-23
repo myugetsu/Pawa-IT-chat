@@ -4,80 +4,23 @@ import { useState } from 'react';
 import QueryForm from '@/components/QueryForm';
 import Response from '@/components/Response';
 import History from '@/components/History';
-import { QueryResponse, HistoryItem } from '@/types';
+import { useQA } from '@/hooks/useQA';
 
 export default function Home() {
-  const [response, setResponse] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [historyId, setHistoryId] = useState<string | null>(null);
-  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const {
+    response,
+    loading,
+    error,
+    history,
+    submitQuery,
+    fetchHistory
+  } = useQA();
+
   const [showHistory, setShowHistory] = useState<boolean>(false);
-
-  const handleSubmit = async (query: string) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch('http://localhost:8000/api/v1/qa/query', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query,
-          history_id: historyId
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      const data: QueryResponse = await response.json();
-      setResponse(data.response);
-      setHistoryId(data.history_id);
-
-      // Add to local history
-      const newHistoryItem: HistoryItem = {
-        id: Date.now().toString(),
-        query,
-        response: data.response,
-        timestamp: new Date().toISOString()
-      };
-
-      setHistory(prev => [...prev, newHistoryItem]);
-
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchHistory = async () => {
-    if (!historyId) return;
-
-    setLoading(true);
-    try {
-      const response = await fetch(`http://localhost:8000/api/v1/qa/history/${historyId}`);
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setHistory(data.history);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error fetching history');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const toggleHistory = () => {
     setShowHistory(!showHistory);
-    if (!showHistory && historyId) {
+    if (!showHistory) {
       fetchHistory();
     }
   };
@@ -95,7 +38,7 @@ export default function Home() {
         </header>
 
         <div className="bg-white rounded-lg shadow-xl p-6 mb-8">
-          <QueryForm onSubmit={handleSubmit} isLoading={loading} />
+          <QueryForm onSubmit={submitQuery} isLoading={loading} />
 
           {error && (
             <div className="mt-4 p-4 bg-red-50 text-red-700 rounded-md">
