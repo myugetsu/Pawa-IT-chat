@@ -2,8 +2,8 @@ import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-# from app.routers import qa
-# from app.config import settings
+from app.routers import qa
+from app.config import settings
 
 app = FastAPI(
     title="Q&A LLM API",
@@ -21,7 +21,7 @@ app.add_middleware(
 )
 
 # Include routers
-# app.include_router(qa.router)
+app.include_router(qa.router)
 
 # Global error handler
 @app.exception_handler(Exception)
