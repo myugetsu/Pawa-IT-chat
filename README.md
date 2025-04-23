@@ -89,14 +89,3 @@ The frontend is built with Next.js and provides the user interface for the chat 
 1. Start the backend server (see backend setup instructions).
 2. Start the frontend server (see frontend setup instructions).
 
----
-
-## Contributing
-
-Feel free to submit issues or pull requests to improve the project.
-
----
-
-## License
-
-This project is licensed under the MIT License.
